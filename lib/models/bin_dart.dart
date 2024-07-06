@@ -5,7 +5,7 @@ import 'package:iyzi_dart/enums/status.dart';
 class BinDart {
   late Status status;
   late DateTime date;
-  late String conversation;
+  late String conversationId;
   late String binNumber;
   String? errorCode;
   String? errorMessage;
@@ -21,7 +21,7 @@ class BinDart {
     status = data['status'] == 'success' ? Status.success : Status.failure;
     date = DateTime.fromMillisecondsSinceEpoch(data['systemTime']);
     binNumber = data['binNumber'];
-    conversation = data['conversationId'];
+    conversationId = data['conversationId'];
     errorCode = data['errorCode'];
     errorMessage = data['errorMessage'];
     cardType = data['cardType'];
