@@ -5,5 +5,11 @@ class IyziConfig {
   String secretKey;
   String randomKey;
 
-  IyziConfig(this.baseUrl, this.callBackUrl, this.apiKey, this.secretKey, this.randomKey);
+  IyziConfig(
+    this.baseUrl,
+    this.callBackUrl,
+    this.apiKey,
+    this.secretKey,
+    this.randomKey,
+  );
 }
