@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:iyzi_dart/enums/status.dart';
 
-class BinDart {
+class IyziBin {
   late Status status;
   late DateTime date;
   late String conversationId;
@@ -16,12 +16,12 @@ class BinDart {
   int? bankCode;
   int? commercial;
 
-  BinDart.fromJson(String json) {
+  IyziBin.fromJson(String json) {
     var data = jsonDecode(json);
     status = data['status'] == 'success' ? Status.success : Status.failure;
     date = DateTime.fromMillisecondsSinceEpoch(data['systemTime']);
-    binNumber = data['binNumber'];
     conversationId = data['conversationId'];
+    binNumber = data['binNumber'];
     errorCode = data['errorCode'];
     errorMessage = data['errorMessage'];
     cardType = data['cardType'];
