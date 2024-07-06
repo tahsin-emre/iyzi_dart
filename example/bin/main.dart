@@ -1,20 +1,20 @@
 import 'package:iyzi_dart/iyzi_dart.dart';
 import 'package:iyzi_dart/models/iyzi_basket_item.dart';
 import 'package:iyzi_dart/models/iyzi_billing.dart';
-import 'package:iyzi_dart/models/iyzi_bin.dart';
 import 'package:iyzi_dart/models/iyzi_buyer.dart';
 import 'package:iyzi_dart/models/iyzi_card.dart';
 import 'package:iyzi_dart/models/iyzi_init_3d.dart';
-import 'gitsecret/keys.dart';
 
 void main() async {
-  IyziConfig config =
-      IyziConfig(Keys.baseUrl, Keys.callBackUrl, Keys.apiKey, Keys.secretKey, 'RANDOMKEY');
+  const String callBackUrl = 'https://api.tahsinemre.com/payCheck';
+  const String baseUrl = 'https://sandbox-api.iyzipay.com/payment';
+  const String apiKey = 'sandbox-dEOtNJJ6C99HvLILB9cKbmfA1agGva0R';
+  const String secretKey = 'sandbox-WPJxHhul8PrNTeZVSlolQJJruL9K65JW';
+  IyziConfig config = IyziConfig(baseUrl, callBackUrl, apiKey, secretKey, 'RANDOMKEY');
   IyziDart iyziDart = IyziDart(config);
-
   IyziCard card = IyziCard('Tahsin Emre Telli', '000', '12', '2030', '5400010000000004');
   IyziBasketItem item =
-      IyziBasketItem('turboTalkers', '360.50', 'Turkish Lesson', 'DIGITAL SERVICE', 'VIRTUAL');
+      IyziBasketItem('TurboTalkers', '360.00', 'Turkish Lesson', 'DIGITAL SERVICE', 'VIRTUAL');
   IyziBilling billing = IyziBilling(
     'Adatepe Mh. Doğuş Cd. No:207Z D:1 Buca/İzmir',
     'Tahsin Emre Telli',
@@ -32,11 +32,14 @@ void main() async {
     'Türkiye',
     '193.140.25.34',
   );
-  IyziBin bin = await iyziDart.binCheck('589004', 'testConv1');
-  print(bin.toMap);
-  print('*************');
-  IyziInit3D init3d = await iyziDart.init3D('testConv2', 'USD', card, buyer, billing, [item]);
+  IyziInit3D init3d = await iyziDart.init3D('testConv3', 'USD', card, buyer, billing, [item]);
   print(init3d.toMap);
   print('%%%%%%%%%%%%%');
   print(init3d.convertHtml());
+
+  // //You have to catch paymentId and conversationData on callbackUrl
+  const String paymentId = 'paymentId';
+  const String conversationData = 'conversationData';
+  String result = await iyziDart.complete3D('testConv2', paymentId, conversationData);
+  print(result);
 }

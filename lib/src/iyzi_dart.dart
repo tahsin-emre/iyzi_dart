@@ -23,7 +23,6 @@ class IyziDart {
     String body =
         jsonEncode({'locale': 'tr', 'binNumber': bin, 'conversationId': conv, 'price': 100});
     var response = await requester.createRequest(uri, body);
-    print('response:${jsonDecode(response.body).toString().replaceAll(',', '\n')}');
     return IyziBin.fromJson(response.body);
   }
 
@@ -55,7 +54,19 @@ class IyziDart {
       'basketItems': [...items.map((e) => e.toMap)],
     });
     var response = await requester.createRequest(uri, body);
-    print('response:${jsonDecode(response.body).toString().replaceAll(',', '\n')}');
     return IyziInit3D.fromJson(response.body);
+  }
+
+  Future<String> complete3D(String conv, String paymentId, String? conversationData) async {
+    Requester requester = Requester(config);
+    Uri uri = Uri.parse('${config.baseUrl}/3dsecure/auth');
+    String body = jsonEncode({
+      'locale': 'tr',
+      'paymentId': paymentId,
+      'conversationId': conv,
+      'conversationData': conversationData
+    });
+    var response = await requester.createRequest(uri, body);
+    return response.body;
   }
 }
