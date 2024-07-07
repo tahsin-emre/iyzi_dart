@@ -20,8 +20,12 @@ class IyziDart {
   Future<IyziBin> binCheck(String bin, String conv) async {
     Requester requester = Requester(config);
     Uri uri = Uri.parse('${config.baseUrl}/bin/check');
-    String body =
-        jsonEncode({'locale': 'tr', 'binNumber': bin, 'conversationId': conv, 'price': 100});
+    String body = jsonEncode({
+      'locale': 'tr',
+      'binNumber': bin,
+      'conversationId': conv,
+      'price': 100
+    });
     var response = await requester.createRequest(uri, body);
     return IyziBin.fromJson(response.body);
   }
@@ -57,7 +61,8 @@ class IyziDart {
     return IyziInit3D.fromJson(response.body);
   }
 
-  Future<String> complete3D(String conv, String paymentId, String? conversationData) async {
+  Future<String> complete3D(
+      String conv, String paymentId, String? conversationData) async {
     Requester requester = Requester(config);
     Uri uri = Uri.parse('${config.baseUrl}/3dsecure/auth');
     String body = jsonEncode({

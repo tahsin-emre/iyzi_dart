@@ -14,6 +14,8 @@ class Requester {
       'Content-Type': 'application/json',
       'x-iyzi-rnd': config.randomKey,
       'Authorization': auth,
+      "Access-Control-Allow-Origin": "*",
+      'Accept': '*/*'
     };
     return http.post(uri, body: body, headers: headers);
   }
@@ -24,7 +26,8 @@ class Requester {
     String dataToEncrypt = config.randomKey + payload;
     var hmacSha256 = Hmac(sha256, utf8.encode(config.secretKey));
     var enc = hmacSha256.convert(utf8.encode(dataToEncrypt));
-    String authKey = 'apiKey:${config.apiKey}&randomKey:${config.randomKey}&signature:$enc';
+    String authKey =
+        'apiKey:${config.apiKey}&randomKey:${config.randomKey}&signature:$enc';
     List<int> utf8Bytes = utf8.encode(authKey);
     String codeKey = base64Encode(utf8Bytes);
     return '$hashKey $codeKey';

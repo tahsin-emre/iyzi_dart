@@ -1,6 +1,6 @@
 name: iyzi_dart
 description: "Utility toolkit for Iyzico virtual point of sale (VPOS)  Payment Gateway Integration."
-version: 0.0.2
+version: 0.0.2+1
 homepage: https://github.com/tahsin-emre/iyzi_dart.git
 # author: Tahsin Emre Telli <telli@tahsinemre.com>
 
@@ -11,8 +11,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http:
-  crypto:
+  http: ^1.2.1
+  crypto: ^3.0.3
 
 dev_dependencies:
   flutter_test:
