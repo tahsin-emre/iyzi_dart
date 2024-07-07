@@ -62,7 +62,7 @@ void main() async {
   print(init3d.convertHtml());
 
   // //You have to catch paymentId and conversationData on callbackUrl
-  const String paymentId = 'paymentId';
+  const String paymentId = '0123456';
   const String conversationData = 'conversationData';
   String result = await iyziDart.complete3D(
     'testConvID',

@@ -15,7 +15,8 @@ class Requester {
       'x-iyzi-rnd': config.randomKey,
       'Authorization': auth,
       "Access-Control-Allow-Origin": "*",
-      'Accept': '*/*'
+      'accept': '*/*',
+      'Accept': 'application/json',
     };
     return http.post(uri, body: body, headers: headers);
   }
