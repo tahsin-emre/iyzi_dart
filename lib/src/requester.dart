@@ -16,6 +16,7 @@ class Requester {
       'Authorization': auth,
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Header': '*',
+      'Access-Control-Allow-Credentials': 'true',
       'Accept': '*',
     };
     return http.post(uri, body: body, headers: headers);
