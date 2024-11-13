@@ -56,6 +56,7 @@ class IyziDart {
       'buyer': buyer.toMap,
       'billingAddress': billing.toMap,
       'basketItems': [...items.map((e) => e.toMap)],
+      'shippingAddress': billing.toMap,
     });
     var response = await requester.createRequest(uri, body);
     return IyziInit3D.fromJson(response.body);
