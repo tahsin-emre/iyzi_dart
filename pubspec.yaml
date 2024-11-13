@@ -1,6 +1,6 @@
 name: iyzi_dart
 description: "Utility toolkit for Iyzico virtual point of sale (VPOS)  Payment Gateway Integration."
-version: 0.0.2+5
+version: 0.0.3+1
 homepage: https://github.com/tahsin-emre/iyzi_dart.git
 
 environment:
