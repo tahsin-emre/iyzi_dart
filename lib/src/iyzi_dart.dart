@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:iyzi_dart/extensions/address_ext.dart';
 import 'package:iyzi_dart/extensions/basket_item_ext.dart';
 import 'package:iyzi_dart/extensions/buyer_ext.dart';
 import 'package:iyzi_dart/extensions/card_ext.dart';
+import 'package:iyzi_dart/models/iyzi_address.dart';
 import 'package:iyzi_dart/models/iyzi_basket_item.dart';
 import 'package:iyzi_dart/models/iyzi_buyer.dart';
 import 'package:iyzi_dart/models/iyzi_card.dart';
@@ -27,23 +29,26 @@ final class IyziDart {
   //   return IyziBin.fromJson(response.body);
   // }
 
-  Future<IyziInit3D> init3D(
-    String conv,
-    String currency,
-    IyziCard card,
-    IyziBuyer buyer,
-    // IyziBilling billing,
-    List<IyziBasketItem> items,
-  ) async {
+  /// Currency default is 'TRY', locale default is 'tr'
+  Future<IyziInit3D> initializePayment({
+    required String conversationId,
+    required IyziCard card,
+    required IyziBuyer buyer,
+    required IyziAddress billingAddress,
+    required IyziAddress shippingAddress,
+    required List<IyziBasketItem> basketItems,
+    String currency = 'TRY',
+    String locale = 'tr',
+  }) async {
     final requester = Requester(config);
     final uri = Uri.parse('${config.baseUrl}/3dsecure/initialize');
     num price = 0;
-    for (final item in items) {
+    for (final item in basketItems) {
       price += num.tryParse(item.price) ?? 0;
     }
     final body = jsonEncode({
-      'locale': 'tr',
-      'conversationId': conv,
+      'locale': locale,
+      'conversationId': conversationId,
       'currency': currency,
       'callbackUrl': config.callBackUrl,
       'price': price.toStringAsFixed(2),
@@ -51,9 +56,9 @@ final class IyziDart {
       'installment': 1,
       'paymentCard': card.toMap,
       'buyer': buyer.toMap,
-      // 'billingAddress': billing.toMap,
-      'basketItems': [...items.map((e) => e.toMap)],
-      // 'shippingAddress': billing.toMap,
+      'billingAddress': billingAddress.toMap,
+      'shippingAddress': shippingAddress.toMap,
+      'basketItems': [...basketItems.map((basketItem) => basketItem.toMap)],
     });
     final response = await requester.createRequest(uri, body);
     return IyziInit3D.fromJson(response.body);
