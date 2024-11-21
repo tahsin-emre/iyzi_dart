@@ -1,52 +1,60 @@
 import 'dart:convert';
 
+import 'package:iyzi_dart/extensions/address_ext.dart';
 import 'package:iyzi_dart/extensions/basket_item_ext.dart';
-import 'package:iyzi_dart/extensions/billing_ext.dart';
 import 'package:iyzi_dart/extensions/buyer_ext.dart';
 import 'package:iyzi_dart/extensions/card_ext.dart';
+import 'package:iyzi_dart/models/iyzi_address.dart';
 import 'package:iyzi_dart/models/iyzi_basket_item.dart';
-import 'package:iyzi_dart/models/iyzi_billing.dart';
-import 'package:iyzi_dart/models/iyzi_bin.dart';
+import 'package:iyzi_dart/models/iyzi_bin_response.dart';
 import 'package:iyzi_dart/models/iyzi_buyer.dart';
 import 'package:iyzi_dart/models/iyzi_card.dart';
 import 'package:iyzi_dart/models/iyzi_config.dart';
-import 'package:iyzi_dart/models/iyzi_init_3d.dart';
+import 'package:iyzi_dart/models/iyzi_init_response.dart';
 import 'package:iyzi_dart/src/requester.dart';
 
-class IyziDart {
-  IyziConfig config;
-  IyziDart(this.config);
+final class IyziDart {
+  const IyziDart(this.config);
+  final IyziConfig config;
 
-  Future<IyziBin> binCheck(String bin, String conv) async {
-    Requester requester = Requester(config);
-    Uri uri = Uri.parse('${config.baseUrl}/bin/check');
-    String body = jsonEncode({
-      'locale': 'tr',
-      'binNumber': bin,
-      'conversationId': conv,
-      'price': 100
+  Future<IyziBinResponse> binCheck({
+    required String binNumber,
+    required String conversationId,
+    String? locale = 'tr',
+  }) async {
+    final requester = Requester(config);
+    final uri = Uri.parse('${config.baseUrl}/bin/check');
+    final body = jsonEncode({
+      'locale': locale,
+      'binNumber': binNumber,
+      'conversationId': conversationId,
+      'price': 100,
     });
-    var response = await requester.createRequest(uri, body);
-    return IyziBin.fromJson(response.body);
+    final response = await requester.createRequest(uri, body);
+    return IyziBinResponse.fromJson(response.body);
   }
 
-  Future<IyziInit3D> init3D(
-    String conv,
-    String currency,
-    IyziCard card,
-    IyziBuyer buyer,
-    IyziBilling billing,
-    List<IyziBasketItem> items,
-  ) async {
-    Requester requester = Requester(config);
-    Uri uri = Uri.parse('${config.baseUrl}/3dsecure/initialize');
+  /// Currency default is 'TRY'
+  /// Locale default is 'tr'
+  Future<IyziInitResponse> initializePayment({
+    required String conversationId,
+    required IyziCard card,
+    required IyziBuyer buyer,
+    required IyziAddress billingAddress,
+    required IyziAddress shippingAddress,
+    required List<IyziBasketItem> basketItems,
+    String currency = 'TRY',
+    String locale = 'tr',
+  }) async {
+    final requester = Requester(config);
+    final uri = Uri.parse('${config.baseUrl}/3dsecure/initialize');
     num price = 0;
-    for (var item in items) {
+    for (final item in basketItems) {
       price += num.tryParse(item.price) ?? 0;
     }
-    String body = jsonEncode({
-      'locale': 'tr',
-      'conversationId': conv,
+    final body = jsonEncode({
+      'locale': locale,
+      'conversationId': conversationId,
       'currency': currency,
       'callbackUrl': config.callBackUrl,
       'price': price.toStringAsFixed(2),
@@ -54,25 +62,30 @@ class IyziDart {
       'installment': 1,
       'paymentCard': card.toMap,
       'buyer': buyer.toMap,
-      'billingAddress': billing.toMap,
-      'basketItems': [...items.map((e) => e.toMap)],
-      'shippingAddress': billing.toMap,
+      'billingAddress': billingAddress.toMap,
+      'shippingAddress': shippingAddress.toMap,
+      'basketItems': [...basketItems.map((basketItem) => basketItem.toMap)],
     });
-    var response = await requester.createRequest(uri, body);
-    return IyziInit3D.fromJson(response.body);
+    final response = await requester.createRequest(uri, body);
+    return IyziInitResponse.fromJson(response.body);
   }
 
-  Future<String> complete3D(
-      String conv, String paymentId, String? conversationData) async {
-    Requester requester = Requester(config);
-    Uri uri = Uri.parse('${config.baseUrl}/3dsecure/auth');
-    String body = jsonEncode({
-      'locale': 'tr',
+  /// Locale default is 'tr'
+  Future<String> completePayment({
+    required String conversationId,
+    required String paymentId,
+    required String? conversationData,
+    String locale = 'tr',
+  }) async {
+    final requester = Requester(config);
+    final uri = Uri.parse('${config.baseUrl}/3dsecure/auth');
+    final body = jsonEncode({
+      'locale': locale,
       'paymentId': paymentId,
-      'conversationId': conv,
-      'conversationData': conversationData
+      'conversationId': conversationId,
+      'conversationData': conversationData,
     });
-    var response = await requester.createRequest(uri, body);
+    final response = await requester.createRequest(uri, body);
     return response.body;
   }
 }

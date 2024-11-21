@@ -1,9 +1,20 @@
-class IyziBasketItem {
-  late String id;
-  late String price;
-  late String name;
-  late String category1;
-  late String itemType;
+import 'package:iyzi_dart/enums/item_types.dart';
 
-  IyziBasketItem(this.id, this.price, this.name, this.category1, this.itemType);
+final class IyziBasketItem {
+  /// Category 2 is optional
+  const IyziBasketItem({
+    required this.id,
+    required this.price,
+    required this.name,
+    required this.category1,
+    required this.itemType,
+    this.category2,
+  });
+
+  final String id;
+  final String price;
+  final String name;
+  final String category1;
+  final String? category2;
+  final ItemTypes itemType;
 }
