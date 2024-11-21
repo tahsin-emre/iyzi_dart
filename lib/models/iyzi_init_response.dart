@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:iyzi_dart/enums/status.dart';
 
-class IyziInit3D {
-  IyziInit3D.fromJson(String json) {
+class IyziInitResponse {
+  IyziInitResponse.fromJson(String json) {
     final data = jsonDecode(json) as Map<String, dynamic>;
     status = data['status'] == 'success' ? Status.success : Status.failure;
     date = DateTime.fromMillisecondsSinceEpoch(data['systemTime'] as int);

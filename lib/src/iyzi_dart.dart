@@ -6,31 +6,37 @@ import 'package:iyzi_dart/extensions/buyer_ext.dart';
 import 'package:iyzi_dart/extensions/card_ext.dart';
 import 'package:iyzi_dart/models/iyzi_address.dart';
 import 'package:iyzi_dart/models/iyzi_basket_item.dart';
+import 'package:iyzi_dart/models/iyzi_bin_response.dart';
 import 'package:iyzi_dart/models/iyzi_buyer.dart';
 import 'package:iyzi_dart/models/iyzi_card.dart';
 import 'package:iyzi_dart/models/iyzi_config.dart';
-import 'package:iyzi_dart/models/iyzi_init_3d.dart';
+import 'package:iyzi_dart/models/iyzi_init_response.dart';
 import 'package:iyzi_dart/src/requester.dart';
 
 final class IyziDart {
   const IyziDart(this.config);
   final IyziConfig config;
 
-  // Future<IyziBin> binCheck(String bin, String conv) async {
-  //   final requester = Requester(config);
-  //   final uri = Uri.parse('${config.baseUrl}/bin/check');
-  //   final body = jsonEncode({
-  //     'locale': 'tr',
-  //     'binNumber': bin,
-  //     'conversationId': conv,
-  //     'price': 100,
-  //   });
-  //   final response = await requester.createRequest(uri, body);
-  //   return IyziBin.fromJson(response.body);
-  // }
+  Future<IyziBinResponse> binCheck({
+    required String binNumber,
+    required String conversationId,
+    String? locale = 'tr',
+  }) async {
+    final requester = Requester(config);
+    final uri = Uri.parse('${config.baseUrl}/bin/check');
+    final body = jsonEncode({
+      'locale': locale,
+      'binNumber': binNumber,
+      'conversationId': conversationId,
+      'price': 100,
+    });
+    final response = await requester.createRequest(uri, body);
+    return IyziBinResponse.fromJson(response.body);
+  }
 
-  /// Currency default is 'TRY', locale default is 'tr'
-  Future<IyziInit3D> initializePayment({
+  /// Currency default is 'TRY'
+  /// Locale default is 'tr'
+  Future<IyziInitResponse> initializePayment({
     required String conversationId,
     required IyziCard card,
     required IyziBuyer buyer,
@@ -61,20 +67,22 @@ final class IyziDart {
       'basketItems': [...basketItems.map((basketItem) => basketItem.toMap)],
     });
     final response = await requester.createRequest(uri, body);
-    return IyziInit3D.fromJson(response.body);
+    return IyziInitResponse.fromJson(response.body);
   }
 
-  Future<String> complete3D(
-    String conv,
-    String paymentId,
-    String? conversationData,
-  ) async {
+  /// Locale default is 'tr'
+  Future<String> completePayment({
+    required String conversationId,
+    required String paymentId,
+    required String? conversationData,
+    String locale = 'tr',
+  }) async {
     final requester = Requester(config);
     final uri = Uri.parse('${config.baseUrl}/3dsecure/auth');
     final body = jsonEncode({
-      'locale': 'tr',
+      'locale': locale,
       'paymentId': paymentId,
-      'conversationId': conv,
+      'conversationId': conversationId,
       'conversationData': conversationData,
     });
     final response = await requester.createRequest(uri, body);
