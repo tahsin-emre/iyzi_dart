@@ -1,15 +1,15 @@
-class IyziConfig {
-  String baseUrl;
-  String callBackUrl;
-  String apiKey;
-  String secretKey;
-  String randomKey;
+final class IyziConfig {
+  const IyziConfig({
+    required this.baseUrl,
+    required this.callBackUrl,
+    required this.apiKey,
+    required this.secretKey,
+    required this.randomKey,
+  });
 
-  IyziConfig(
-    this.baseUrl,
-    this.callBackUrl,
-    this.apiKey,
-    this.secretKey,
-    this.randomKey,
-  );
+  final String baseUrl;
+  final String callBackUrl;
+  final String apiKey;
+  final String secretKey;
+  final String randomKey;
 }

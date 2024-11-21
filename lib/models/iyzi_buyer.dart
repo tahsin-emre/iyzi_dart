@@ -1,23 +1,31 @@
-class IyziBuyer {
-  late String id;
-  late String name;
-  late String surname;
-  late String identityNumber;
-  late String email;
-  late String registrationAddress;
-  late String city;
-  late String country;
-  late String ip;
+final class IyziBuyer {
+  const IyziBuyer({
+    required this.id,
+    required this.name,
+    required this.surname,
+    required this.identityNumber,
+    required this.email,
+    required this.registrationAddress,
+    required this.city,
+    required this.country,
+    required this.ip,
+    this.gsmNumber,
+    this.registrationDate,
+    this.lastLoginDate,
+    this.zipCode,
+  });
 
-  IyziBuyer(
-    this.id,
-    this.name,
-    this.surname,
-    this.identityNumber,
-    this.email,
-    this.registrationAddress,
-    this.city,
-    this.country,
-    this.ip,
-  );
+  final String id;
+  final String name;
+  final String surname;
+  final String identityNumber;
+  final String email;
+  final String registrationAddress;
+  final String city;
+  final String country;
+  final String ip;
+  final String? gsmNumber;
+  final String? registrationDate;
+  final String? lastLoginDate;
+  final String? zipCode;
 }

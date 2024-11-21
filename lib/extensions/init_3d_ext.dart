@@ -9,6 +9,6 @@ extension Init3DExt on IyziInit3D {
         'errorMessage': errorMessage ?? '',
         'paymentId': paymentId ?? '',
         'signature': signature ?? '',
-        'threeDSHtmlContent': threeDSHtmlContent ?? ''
+        'threeDSHtmlContent': threeDSHtmlContent ?? '',
       };
 }

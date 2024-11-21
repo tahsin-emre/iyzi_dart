@@ -4,13 +4,13 @@ import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 import 'package:iyzi_dart/models/iyzi_config.dart';
 
-class Requester {
-  IyziConfig config;
-  Requester(this.config);
+final class Requester {
+  const Requester(this.config);
+  final IyziConfig config;
 
   Future<http.Response> createRequest(Uri uri, String body) {
-    String auth = authString(uri.path, body);
-    Map<String, String> headers = {
+    final auth = authString(uri.path, body);
+    final headers = <String, String>{
       'Content-Type': 'application/json',
       'x-iyzi-rnd': config.randomKey,
       'Authorization': auth,
@@ -23,15 +23,15 @@ class Requester {
   }
 
   String authString(String path, String bodyStr) {
-    String hashKey = 'IYZWSv2';
-    String payload = '$path$bodyStr';
-    String dataToEncrypt = config.randomKey + payload;
-    var hmacSha256 = Hmac(sha256, utf8.encode(config.secretKey));
-    var enc = hmacSha256.convert(utf8.encode(dataToEncrypt));
-    String authKey =
+    const hashKey = 'IYZWSv2';
+    final payload = '$path$bodyStr';
+    final dataToEncrypt = config.randomKey + payload;
+    final hmacSha256 = Hmac(sha256, utf8.encode(config.secretKey));
+    final enc = hmacSha256.convert(utf8.encode(dataToEncrypt));
+    final authKey =
         'apiKey:${config.apiKey}&randomKey:${config.randomKey}&signature:$enc';
-    List<int> utf8Bytes = utf8.encode(authKey);
-    String codeKey = base64Encode(utf8Bytes);
+    final List<int> utf8Bytes = utf8.encode(authKey);
+    final codeKey = base64Encode(utf8Bytes);
     return '$hashKey $codeKey';
   }
 }

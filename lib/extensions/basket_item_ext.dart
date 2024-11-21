@@ -6,6 +6,6 @@ extension BasketItemExt on IyziBasketItem {
         'price': price,
         'name': name,
         'category1': category1,
-        'itemType': itemType,
+        'itemType': itemType.name,
       };
 }

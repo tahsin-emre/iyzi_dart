@@ -1,0 +1,4 @@
+enum ItemTypes {
+  PHYSICAL,
+  VIRTUAL;
+}
