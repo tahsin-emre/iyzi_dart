@@ -8,39 +8,85 @@ support telli@tahsinemre.com
 ```dart
   const String callBackUrl = 'https://api.tahsinemre.com/payCheck';
   const String baseUrl = 'https://sandbox-api.iyzipay.com/payment';
-  const String apiKey = 'sandbox-dEOtNJJ6C99HvLILB9cKbmfA1agGva0R';
-  const String secretKey = 'sandbox-WPJxHhul8PrNTeZVSlolQJJruL9K65JW';
-  IyziConfig config = IyziConfig(baseUrl, callBackUrl, apiKey, secretKey, 'RANDOMKEY');
-  IyziDart iyziDart = IyziDart(config);
-  IyziCard card = IyziCard('Tahsin Emre Telli', '000', '12', '2030', '5400010000000004');
-  IyziBasketItem item =
-      IyziBasketItem('TurboTalkers', '360.00', 'Turkish Lesson', 'DIGITAL SERVICE', 'VIRTUAL');
-  IyziBilling billing = IyziBilling(
-    'Adatepe Mh. Doğuş Cd. No:207Z D:1 Buca/İzmir',
-    'Tahsin Emre Telli',
-    'İzmir',
-    'İstanbul',
+  const String apiKey = 'YOUR-API-KEY';
+  const String secretKey = 'YOUR-SECRET-KEY';
+  const String randomKey = 'RANDOMKEY';
+
+  final config = IyziConfig(
+    baseUrl: baseUrl,
+    callBackUrl: callBackUrl,
+    apiKey: apiKey,
+    secretKey: secretKey,
+    randomKey: randomKey,
+  );
+
+  final iyziDart = IyziDart(config);
+
+  final card = IyziCard(
+    cardHolderName: 'Tahsin Emre Telli',
+    cvc: '000',
+    expireMonth: '12',
+    expireYear: '2030',
+    cardNumber: '5400010000000004',
+  );
+
+  final basketItem = IyziBasketItem(
+    id: 'itemID',
+    price: '360.00',
+    name: 'Turkish Lesson',
+    category1: 'DIGITAL SERVICE',
+    itemType: ItemTypes.VIRTUAL,
+  );
+
+  final billingAdress = IyziAddress(
+    address: 'Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1',
+    contactName: 'Tahsin Emre Telli',
+    city: 'İstanbul',
+    country: 'Türkiye',
+    zipCode: '34732',
   );
   IyziBuyer buyer = IyziBuyer(
-    'userId',
-    'Tahsin Emre',
-    'Telli',
-    '11111111111',
-    'telli@tahsinemre.com',
-    'Adatepe Mh. Doğuş Cd. No:207Z D:1 Buca/İzmir',
-    'İzmir',
-    'Türkiye',
-    '193.140.25.34',
+    id: 'userIdOnAuthenticationService',
+    name: 'Tahsin Emre',
+    surname: 'Telli',
+    identityNumber: '11111111111',
+    email: 'telli@tahsinemre.com',
+    registrationAddress: 'Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1',
+    city: 'İzmir',
+    country: 'Türkiye',
+    ip: '193.140.25.34',
+    gsmNumber: "+905350000000",
+    registrationDate: "2013-04-21 15:12:09",
+    lastLoginDate: "2024-11-23 12:43:35",
   );
-  IyziInit3D init3d = await iyziDart.init3D('testConv3', 'USD', card, buyer, billing, [item]);
-  print(init3d.toMap);
-  print('%%%%%%%%%%%%%');
-  print(init3d.convertHtml());
+  final initializeResponse = await iyziDart.initializePayment(
+    conversationId: 'testConvID',
+    card: card,
+    buyer: buyer,
+    billingAddress: billingAdress,
+    shippingAddress: billingAdress,
+    basketItems: [basketItem],
+  );
 
-  // //You have to catch paymentId and conversationData on callbackUrl
-  const String paymentId = 'paymentId';
-  const String conversationData = 'conversationData';
-  String result = await iyziDart.complete3D('testConv2', paymentId, conversationData);
+  if (initializeResponse.status == Status.failure) {
+    print(initializeResponse.errorMessage);
+    return;
+  }
+
+  if (initializeResponse.status == Status.success) {
+    // You have to show this html content to user
+    print(initializeResponse.convertHtml());
+  }
+
+  // You have to catch paymentId and conversationData on callbackUrl
+  const paymentId = '0123456';
+  const conversationData = 'conversationData';
+  String result = await iyziDart.completePayment(
+    conversationId: 'testConvID',
+    paymentId: paymentId,
+    conversationData: conversationData,
+    locale: 'tr',
+  );
   print(result);
 ```
 
