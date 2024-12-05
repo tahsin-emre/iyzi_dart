@@ -38,14 +38,23 @@ support telli@tahsinemre.com
     itemType: ItemTypes.VIRTUAL,
   );
 
-  final billingAdress = IyziAddress(
+  final billingAddress = IyziAddress(
     address: 'Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1',
     contactName: 'Tahsin Emre Telli',
     city: 'İstanbul',
     country: 'Türkiye',
     zipCode: '34732',
   );
-  IyziBuyer buyer = IyziBuyer(
+
+  final shippingAddress = IyziAddress(
+    address: 'Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1',
+    contactName: 'Tahsin Emre Telli',
+    city: 'İstanbul',
+    country: 'Türkiye',
+    zipCode: '34732',
+  );
+
+  final buyer = IyziBuyer(
     id: 'userIdOnAuthenticationService',
     name: 'Tahsin Emre',
     surname: 'Telli',
@@ -59,12 +68,13 @@ support telli@tahsinemre.com
     registrationDate: "2013-04-21 15:12:09",
     lastLoginDate: "2024-11-23 12:43:35",
   );
+
   final initializeResponse = await iyziDart.initializePayment(
     conversationId: 'testConvID',
     card: card,
     buyer: buyer,
-    billingAddress: billingAdress,
-    shippingAddress: billingAdress,
+    billingAddress: billingAddress,
+    shippingAddress: shippingAdress,
     basketItems: [basketItem],
   );
 
